@@ -1,3 +1,4 @@
+export * from "./activity/drizzle-activity-log.js";
 export * from "./db/connection.js";
 export * from "./db/migrate.js";
 export * from "./db/schema.js";

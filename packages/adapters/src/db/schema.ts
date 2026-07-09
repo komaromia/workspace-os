@@ -113,3 +113,30 @@ export const personaVersions = pgTable(
   },
   (table) => [primaryKey({ columns: [table.personaId, table.version] })],
 );
+
+/**
+ * Unified activity attribution (Epic 2): every recorded action carries the
+ * acting member, regardless of human/agent type. The FK to members enforces
+ * that attribution is to a real principal — a dangling actor is rejected at
+ * the database, not silently recorded. Epic 4 layers tamper-evidence and
+ * export on top of this same trail.
+ */
+export const activities = pgTable(
+  "activities",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    actorMemberId: text("actor_member_id")
+      .notNull()
+      .references(() => members.id),
+    actorType: text("actor_type").notNull(),
+    action: text("action").notNull(),
+    resourceType: text("resource_type").notNull(),
+    resourceId: text("resource_id").notNull(),
+    metadata: jsonb("metadata").notNull().$type<Record<string, unknown>>().default({}),
+    occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("activities_actor_idx").on(table.actorMemberId, table.occurredAt),
+    index("activities_resource_idx").on(table.resourceType, table.resourceId, table.occurredAt),
+  ],
+);

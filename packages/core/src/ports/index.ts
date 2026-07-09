@@ -1,3 +1,4 @@
+export * from "./activity-log.js";
 export * from "./member-repository.js";
 export * from "./model-provider.js";
 export * from "./object-store.js";

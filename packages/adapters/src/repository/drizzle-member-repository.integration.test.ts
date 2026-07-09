@@ -12,7 +12,8 @@ describe("DrizzleMemberRepository (requires local docker Postgres)", () => {
 
   beforeEach(async () => {
     await runMigrations(connectionString);
-    await db.execute(sql`delete from members`);
+    // CASCADE clears activities that FK-reference members (Epic 2 attribution).
+    await db.execute(sql`truncate table members restart identity cascade`);
   });
 
   afterAll(async () => {
