@@ -134,6 +134,27 @@ export const personaVersions = pgTable(
 );
 
 /**
+ * Work items on the shared board (Epic 5). Claimed atomically via FOR UPDATE
+ * SKIP LOCKED so two workers never grab the same item. assignee_member_id
+ * FK-references members so a claim always points at a real principal.
+ */
+export const workItems = pgTable(
+  "work_items",
+  {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    description: text("description"),
+    priority: integer("priority").notNull().default(0),
+    requiredRole: text("required_role"),
+    state: text("state").notNull().default("open"),
+    assigneeMemberId: text("assignee_member_id").references(() => members.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("work_items_claim_idx").on(table.state, table.priority, table.createdAt)],
+);
+
+/**
  * Policy versions — one row per (policyId, version). Immutable versions
  * (Epic 3): a policy change inserts a new row, retaining the full history so a
  * review board can audit exactly what the authorization rules were at any
