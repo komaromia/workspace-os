@@ -10,6 +10,7 @@ export * from "./profile/create-secrets-broker.js";
 export * from "./profile/profile.js";
 export * from "./profile/unsupported-profile-adapter-error.js";
 export * from "./queue/postgres-queue.js";
+export * from "./repository/drizzle-human-credential-repository.js";
 export * from "./repository/drizzle-member-repository.js";
 export * from "./repository/drizzle-persona-repository.js";
 export * from "./secrets-broker/env-secrets-broker.js";

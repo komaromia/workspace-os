@@ -91,6 +91,25 @@ export const members = pgTable(
 );
 
 /**
+ * Local (email/password) login credentials for human members. Kept separate
+ * from members so agents — which authenticate via short-lived scoped tokens,
+ * not passwords — never carry a password field. Only the password hash is
+ * stored; the email is unique.
+ */
+export const humanCredentials = pgTable(
+  "human_credentials",
+  {
+    memberId: text("member_id")
+      .primaryKey()
+      .references(() => members.id),
+    email: text("email").notNull(),
+    passwordHash: text("password_hash").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex("human_credentials_email_idx").on(table.email)],
+);
+
+/**
  * Persona versions — one row per (personaId, version). Versions are immutable
  * (Epic 2/16): a revision inserts a new row rather than updating an existing
  * one, so the full version history is retained for model governance.
