@@ -1,0 +1,16 @@
+{
+  "name": "@workspace-os/core",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Domain model (members, work items, artifacts, meetings) shared across server and agents",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "echo \"no tests yet\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}

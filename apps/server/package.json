@@ -1,0 +1,16 @@
+{
+  "name": "@workspace-os/server",
+  "private": true,
+  "version": "0.0.0",
+  "description": "API, real-time layer, agent workers, and static frontend host",
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"server dev not yet implemented (see docs/epics/01-foundation.md)\" && exit 1",
+    "build": "echo \"server build not yet implemented\" && exit 1",
+    "test": "echo \"no tests yet\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
