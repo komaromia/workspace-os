@@ -1,4 +1,14 @@
-import { customType, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  customType,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 /**
  * pgvector's `vector` type has no first-class drizzle-orm column builder as
@@ -36,3 +46,24 @@ export const schemaBootstrapProbe = pgTable("_schema_bootstrap_probe", {
   embedding: vector("embedding", { dimensions: 3 }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+/**
+ * Backs the Postgres `Queue` adapter (Epic 5 claim semantics: `FOR UPDATE
+ * SKIP LOCKED` so two workers never claim the same row). One table serves
+ * every named queue, partitioned by `queueName`.
+ */
+export const queueMessages = pgTable(
+  "queue_messages",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    queueName: text("queue_name").notNull(),
+    payload: jsonb("payload").notNull(),
+    status: text("status").notNull().default("pending"),
+    attempts: integer("attempts").notNull().default(0),
+    lastError: text("last_error"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    claimedAt: timestamp("claimed_at", { withTimezone: true }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+  },
+  (table) => [index("queue_messages_claim_idx").on(table.queueName, table.status, table.createdAt)],
+);
