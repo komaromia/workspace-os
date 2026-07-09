@@ -1,7 +1,8 @@
-import type { ObjectStore, Queue, SecretsBroker } from "@workspace-os/core";
+import type { ObjectStore, Queue, SandboxRunner, SecretsBroker } from "@workspace-os/core";
 import type { Pool } from "pg";
 import { createObjectStore } from "./create-object-store.js";
 import { createQueue } from "./create-queue.js";
+import { createSandboxRunner } from "./create-sandbox-runner.js";
 import { createSecretsBroker } from "./create-secrets-broker.js";
 import type { Profile } from "./profile.js";
 import { resolveProfile } from "./profile.js";
@@ -10,12 +11,14 @@ export interface Adapters {
   profile: Profile;
   objectStore: ObjectStore;
   secretsBroker: SecretsBroker;
+  sandboxRunner: SandboxRunner;
   createQueue<T>(queueName: string): Queue<T>;
 }
 
 export interface AdapterOverrides {
   objectStore?: ObjectStore;
   secretsBroker?: SecretsBroker;
+  sandboxRunner?: SandboxRunner;
 }
 
 /**
@@ -34,6 +37,7 @@ export function createAdapters(
     profile,
     objectStore: createObjectStore(profile, env, overrides.objectStore),
     secretsBroker: createSecretsBroker(profile, env, overrides.secretsBroker),
+    sandboxRunner: createSandboxRunner(profile, overrides.sandboxRunner),
     createQueue: (queueName) => createQueue(pool, queueName, profile),
   };
 }
