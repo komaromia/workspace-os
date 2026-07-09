@@ -5,12 +5,12 @@ file in this directory with a goal, rationale, key stories, and acceptance crite
 
 ## Phasing
 
-| Phase | Epics | Theme |
-|---|---|---|
-| 1 — Spine | [1](01-foundation.md), [2](02-identity-membership.md), [3](03-authorization-policy.md), [4](04-audit-observability.md), [5](05-shared-work-board.md) | Create a member, publish work, have an agent claim it and produce an artifact under authorization, all logged |
-| 2 — Real work | [6](06-artifacts-documentation.md), [7](07-agent-runtime-orchestration.md), [8](08-model-gateway.md), [9](09-tool-mcp-gateway.md) | Code sandbox, MCP tools, real-time collaboration, approvals groundwork |
-| 3 — Business surface | [10](10-code-sandbox.md), [11](11-realtime-collaboration.md), [12](12-meetings-sync.md), [13](13-analytics-finance.md) | Meetings, analytics, finance |
-| 4 — Production | [14](14-approvals-hitl-ux.md), [15](15-deployment-hardening.md), [16](16-model-governance-compliance.md) | Hardening and compliance enablement, formalized but developed incrementally throughout |
+| Phase                | Epics                                                                                                                                                | Theme                                                                                                         |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 1 — Spine            | [1](01-foundation.md), [2](02-identity-membership.md), [3](03-authorization-policy.md), [4](04-audit-observability.md), [5](05-shared-work-board.md) | Create a member, publish work, have an agent claim it and produce an artifact under authorization, all logged |
+| 2 — Real work        | [6](06-artifacts-documentation.md), [7](07-agent-runtime-orchestration.md), [8](08-model-gateway.md), [9](09-tool-mcp-gateway.md)                    | Code sandbox, MCP tools, real-time collaboration, approvals groundwork                                        |
+| 3 — Business surface | [10](10-code-sandbox.md), [11](11-realtime-collaboration.md), [12](12-meetings-sync.md), [13](13-analytics-finance.md)                               | Meetings, analytics, finance                                                                                  |
+| 4 — Production       | [14](14-approvals-hitl-ux.md), [15](15-deployment-hardening.md), [16](16-model-governance-compliance.md)                                             | Hardening and compliance enablement, formalized but developed incrementally throughout                        |
 
 ## Recommended starting point
 

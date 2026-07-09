@@ -14,21 +14,21 @@ them, it shells out to a containerized tool rather than importing them into the 
 
 ## Recommended TypeScript stack
 
-| Concern | Choice |
-|---|---|
-| Runtime/API | Node.js + Fastify (or Hono) |
-| Frontend | React + Vite |
-| Real-time | WebSocket + Yjs (CRDT) for collaborative artifacts |
-| Database | Postgres + pgvector, via Drizzle ORM |
-| Work queue | Postgres `SELECT … FOR UPDATE SKIP LOCKED` (simple profile) |
-| Event bus | Postgres `LISTEN/NOTIFY` (simple profile) |
+| Concern           | Choice                                                                                                         |
+| ----------------- | -------------------------------------------------------------------------------------------------------------- |
+| Runtime/API       | Node.js + Fastify (or Hono)                                                                                    |
+| Frontend          | React + Vite                                                                                                   |
+| Real-time         | WebSocket + Yjs (CRDT) for collaborative artifacts                                                             |
+| Database          | Postgres + pgvector, via Drizzle ORM                                                                           |
+| Work queue        | Postgres `SELECT … FOR UPDATE SKIP LOCKED` (simple profile)                                                    |
+| Event bus         | Postgres `LISTEN/NOTIFY` (simple profile)                                                                      |
 | Durable execution | DBOS (TypeScript SDK) — crash-safe agent workflows, checkpointing to Postgres; swappable for Temporal at scale |
-| Model access | Thin `ModelProvider` interface over provider SDKs and/or local model via Ollama |
-| Tools | MCP TypeScript SDK |
-| Sandbox | Docker via dockerode, with gVisor/Kata runtime |
-| Authorization | TypeScript policy module (role + relationship checks backed by Postgres); adopt OpenFGA at scale |
-| Observability | OpenTelemetry + self-hosted Langfuse |
-| Analytics | DuckDB (Node bindings) simple / ClickHouse at scale |
+| Model access      | Thin `ModelProvider` interface over provider SDKs and/or local model via Ollama                                |
+| Tools             | MCP TypeScript SDK                                                                                             |
+| Sandbox           | Docker via dockerode, with gVisor/Kata runtime                                                                 |
+| Authorization     | TypeScript policy module (role + relationship checks backed by Postgres); adopt OpenFGA at scale               |
+| Observability     | OpenTelemetry + self-hosted Langfuse                                                                           |
+| Analytics         | DuckDB (Node bindings) simple / ClickHouse at scale                                                            |
 
 ## Guiding principles
 

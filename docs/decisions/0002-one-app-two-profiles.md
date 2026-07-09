@@ -31,7 +31,7 @@ Deployment descriptions (not code) live side by side in `deploy/simple` and `dep
   profiles, or the hardened deployment isn't actually validated by anything that ran in
   development. A single codebase makes that a structural guarantee rather than a policy.
 - The security-relevant differences between "my laptop" and "inside a bank" are almost entirely
-  about *what's on the other side of an interface* (which object store, which model endpoint,
+  about _what's on the other side of an interface_ (which object store, which model endpoint,
   whether egress is allowed at all) — which is exactly what the adapter pattern is for.
 - Forking or maintaining a parallel enterprise branch was the realistic alternative, and it fails
   the moment a security fix or feature lands in only one branch.

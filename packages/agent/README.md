@@ -5,6 +5,7 @@ MCP/tool client, and the sandbox runner client. Owns agent-specific behavior rat
 built on a heavyweight multi-agent framework.
 
 Not yet implemented — see:
+
 - [`docs/epics/07-agent-runtime-orchestration.md`](../../docs/epics/07-agent-runtime-orchestration.md)
 - [`docs/epics/08-model-gateway.md`](../../docs/epics/08-model-gateway.md)
 - [`docs/epics/09-tool-mcp-gateway.md`](../../docs/epics/09-tool-mcp-gateway.md)
