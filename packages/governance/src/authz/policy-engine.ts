@@ -11,6 +11,11 @@ export interface AuthorizationDecision {
   approversRequired?: number;
 }
 
+export interface AuthorizationContext {
+  /** The relationships the acting member has to the target resource. */
+  relationships?: string[];
+}
+
 /**
  * The central authorization decision point (Epic 3). Deny-by-default: an
  * unknown action is refused, never permitted. Consequence drives the outcome
@@ -24,17 +29,38 @@ export interface AuthorizationDecision {
 export class PolicyEngine {
   constructor(private readonly registry: ActionRegistry) {}
 
-  authorize(_member: Member, actionName: string): AuthorizationDecision {
+  authorize(
+    member: Member,
+    actionName: string,
+    context: AuthorizationContext = {},
+  ): AuthorizationDecision {
     const action = this.registry.get(actionName);
     if (!action) {
       return { outcome: "deny", reason: "unknown-action" };
     }
+
+    // Eligibility gates run before consequence routing: a member who lacks the
+    // role or relationship is denied outright — they cannot even propose.
+    if (action.requiredRoles && !member.hasAnyRole(action.requiredRoles)) {
+      return { outcome: "deny", reason: "insufficient-role" };
+    }
+    if (
+      action.requiredRelationship &&
+      !(context.relationships ?? []).includes(action.requiredRelationship)
+    ) {
+      return { outcome: "deny", reason: "missing-relationship" };
+    }
+
     return decideByConsequence(action.consequence);
   }
 
   /** True only when the member may perform the action with no approval step. */
-  canExecuteDirectly(member: Member, actionName: string): boolean {
-    return this.authorize(member, actionName).outcome === "allow";
+  canExecuteDirectly(
+    member: Member,
+    actionName: string,
+    context: AuthorizationContext = {},
+  ): boolean {
+    return this.authorize(member, actionName, context).outcome === "allow";
   }
 }
 

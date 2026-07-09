@@ -11,6 +11,18 @@ export interface ActionDefinition {
   name: string;
   consequence: Consequence;
   description?: string;
+  /**
+   * Any-of role gate: if set, the acting member must hold at least one of
+   * these roles. Omitted means no role restriction.
+   */
+  requiredRoles?: string[];
+  /**
+   * Relationship gate: if set, the acting member must have this relationship
+   * to the target resource (e.g. "owner"). The relationships a member has to
+   * a resource are supplied per-call; a normalized relationship store (and,
+   * at scale, OpenFGA) can back that lookup without changing this contract.
+   */
+  requiredRelationship?: string;
 }
 
 export class ActionRegistry {
