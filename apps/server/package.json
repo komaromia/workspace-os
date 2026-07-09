@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@workspace-os/adapters": "workspace:*",
+    "@workspace-os/agent": "workspace:*",
     "@workspace-os/core": "workspace:*",
     "fastify": "^5.1.0"
   },

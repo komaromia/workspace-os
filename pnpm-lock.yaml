@@ -41,6 +41,9 @@ importers:
       '@workspace-os/adapters':
         specifier: workspace:*
         version: link:../../packages/adapters
+      '@workspace-os/agent':
+        specifier: workspace:*
+        version: link:../../packages/agent
       '@workspace-os/core':
         specifier: workspace:*
         version: link:../../packages/core
