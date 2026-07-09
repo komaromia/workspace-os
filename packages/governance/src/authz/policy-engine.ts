@@ -1,5 +1,6 @@
 import type { Member } from "@workspace-os/core";
 import type { ActionRegistry, Consequence } from "./action.js";
+import type { PolicyDefinition } from "../policy/policy-definition.js";
 
 export type AuthorizationOutcome = "allow" | "deny" | "requires_approval";
 
@@ -28,6 +29,11 @@ export interface AuthorizationContext {
  */
 export class PolicyEngine {
   constructor(private readonly registry: ActionRegistry) {}
+
+  /** Build an engine from a versioned policy definition. */
+  static fromDefinition(definition: PolicyDefinition): PolicyEngine {
+    return new PolicyEngine(definition.toActionRegistry());
+  }
 
   authorize(
     member: Member,

@@ -134,6 +134,23 @@ export const personaVersions = pgTable(
 );
 
 /**
+ * Policy versions — one row per (policyId, version). Immutable versions
+ * (Epic 3): a policy change inserts a new row, retaining the full history so a
+ * review board can audit exactly what the authorization rules were at any
+ * version. `actions` holds the classified actions + role/relationship gates.
+ */
+export const policyVersions = pgTable(
+  "policy_versions",
+  {
+    policyId: text("policy_id").notNull(),
+    version: integer("version").notNull(),
+    actions: jsonb("actions").notNull().$type<unknown[]>().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.policyId, table.version] })],
+);
+
+/**
  * Unified activity attribution (Epic 2): every recorded action carries the
  * acting member, regardless of human/agent type. The FK to members enforces
  * that attribution is to a real principal — a dangling actor is rejected at

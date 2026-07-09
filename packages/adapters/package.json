@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@workspace-os/core": "workspace:*",
+    "@workspace-os/governance": "workspace:*",
     "drizzle-orm": "^0.36.0",
     "pg": "^8.13.0"
   },

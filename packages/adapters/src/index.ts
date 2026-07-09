@@ -13,4 +13,5 @@ export * from "./queue/postgres-queue.js";
 export * from "./repository/drizzle-human-credential-repository.js";
 export * from "./repository/drizzle-member-repository.js";
 export * from "./repository/drizzle-persona-repository.js";
+export * from "./repository/drizzle-policy-repository.js";
 export * from "./secrets-broker/env-secrets-broker.js";
