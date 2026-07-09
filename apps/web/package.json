@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "echo \"web dev not yet implemented (see docs/epics/01-foundation.md)\" && exit 1",
-    "build": "echo \"web build not yet implemented\" && exit 1",
+    "build": "echo \"nothing to build yet (see docs/epics/01-foundation.md)\"",
     "test": "echo \"no tests yet\""
   },
   "dependencies": {},
