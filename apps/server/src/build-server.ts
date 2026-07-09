@@ -1,7 +1,18 @@
 import type { FastifyInstance } from "fastify";
-import { createDb, DrizzleMemberRepository } from "@workspace-os/adapters";
+import {
+  createDb,
+  DrizzleHumanCredentialRepository,
+  DrizzleMemberRepository,
+} from "@workspace-os/adapters";
 import { buildApp } from "./app.js";
+import { SessionTokenService } from "./auth/session-token.js";
+import { SignupService } from "./auth/signup-service.js";
+import { registerAuthRoutes } from "./routes/auth.js";
 import { registerMemberRoutes } from "./routes/members.js";
+
+/** Dev-only fallback secret. In the hardened profile SESSION_SECRET is
+ * injected from the vault; this default only exists so local dev works. */
+const DEV_SESSION_SECRET = "dev-only-insecure-session-secret";
 
 /** The pg Pool type, derived from createDb so the server needn't declare pg
  * as a direct dependency. */
@@ -25,6 +36,9 @@ export interface BuiltServer {
 export function buildServer(connectionString: string, logger = false): BuiltServer {
   const { db, pool } = createDb(connectionString);
   const members = new DrizzleMemberRepository(db);
+  const credentials = new DrizzleHumanCredentialRepository(db);
+  const signup = new SignupService({ members, credentials });
+  const sessions = new SessionTokenService(process.env.SESSION_SECRET ?? DEV_SESSION_SECRET);
 
   const app = buildApp({
     logger,
@@ -34,6 +48,7 @@ export function buildServer(connectionString: string, logger = false): BuiltServ
     },
   });
   registerMemberRoutes(app, { members });
+  registerAuthRoutes(app, { signup, sessions, members });
 
   return { app, pool };
 }

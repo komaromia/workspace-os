@@ -55,8 +55,11 @@ jobs:
       - name: Apply database migrations
         run: pnpm --filter @workspace-os/adapters db:migrate
 
-      - name: Integration tests
+      - name: Integration tests (adapters)
         run: pnpm --filter @workspace-os/adapters test:integration
+
+      - name: Integration tests (server)
+        run: pnpm --filter @workspace-os/server test:integration
 
       - name: Build
         run: pnpm build
