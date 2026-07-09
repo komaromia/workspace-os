@@ -1,5 +1,6 @@
-import type { FastifyInstance, FastifyRequest } from "fastify";
+import type { FastifyInstance } from "fastify";
 import { EmailAlreadyRegisteredError, type MemberRepository } from "@workspace-os/core";
+import { authenticate } from "../auth/require-member.js";
 import type { SignupService } from "../auth/signup-service.js";
 import type { SessionTokenService } from "../auth/session-token.js";
 
@@ -69,27 +70,16 @@ export function registerAuthRoutes(app: FastifyInstance, deps: AuthRouteDeps): v
   });
 
   app.get("/me", async (request, reply) => {
-    const token = bearerToken(request);
-    if (!token) {
-      return reply.code(401).send({ error: "unauthenticated" });
-    }
-    const claims = deps.sessions.verify(token, now());
-    if (!claims) {
-      return reply.code(401).send({ error: "unauthenticated" });
-    }
-    const member = await deps.members.findById(claims.memberId);
+    const member = await authenticate(request, {
+      sessions: deps.sessions,
+      members: deps.members,
+      now,
+    });
     if (!member) {
       return reply.code(401).send({ error: "unauthenticated" });
     }
     return member.toJSON();
   });
-}
-
-function bearerToken(request: FastifyRequest): string | null {
-  const header = request.headers.authorization;
-  if (!header || !header.startsWith("Bearer ")) return null;
-  const token = header.slice("Bearer ".length).trim();
-  return token === "" ? null : token;
 }
 
 function isNonEmptyString(value: unknown): value is string {

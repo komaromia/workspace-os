@@ -1,14 +1,17 @@
 import type { FastifyInstance } from "fastify";
 import {
   createDb,
+  DrizzleActivityLog,
   DrizzleHumanCredentialRepository,
   DrizzleMemberRepository,
+  DrizzleWorkItemRepository,
 } from "@workspace-os/adapters";
 import { buildApp } from "./app.js";
 import { SessionTokenService } from "./auth/session-token.js";
 import { SignupService } from "./auth/signup-service.js";
 import { registerAuthRoutes } from "./routes/auth.js";
 import { registerMemberRoutes } from "./routes/members.js";
+import { registerWorkItemRoutes } from "./routes/work-items.js";
 
 /** Dev-only fallback secret. In the hardened profile SESSION_SECRET is
  * injected from the vault; this default only exists so local dev works. */
@@ -37,6 +40,8 @@ export function buildServer(connectionString: string, logger = false): BuiltServ
   const { db, pool } = createDb(connectionString);
   const members = new DrizzleMemberRepository(db);
   const credentials = new DrizzleHumanCredentialRepository(db);
+  const workItems = new DrizzleWorkItemRepository(db);
+  const activity = new DrizzleActivityLog(db);
   const signup = new SignupService({ members, credentials });
   const sessions = new SessionTokenService(process.env.SESSION_SECRET ?? DEV_SESSION_SECRET);
 
@@ -49,6 +54,7 @@ export function buildServer(connectionString: string, logger = false): BuiltServ
   });
   registerMemberRoutes(app, { members });
   registerAuthRoutes(app, { signup, sessions, members });
+  registerWorkItemRoutes(app, { workItems, activity, sessions, members });
 
   return { app, pool };
 }
