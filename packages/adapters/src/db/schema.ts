@@ -4,9 +4,11 @@ import {
   integer,
   jsonb,
   pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -66,4 +68,48 @@ export const queueMessages = pgTable(
     completedAt: timestamp("completed_at", { withTimezone: true }),
   },
   (table) => [index("queue_messages_claim_idx").on(table.queueName, table.status, table.createdAt)],
+);
+
+/**
+ * Members — the single first-class principal (Epic 2). Humans and agents live
+ * in one table; `type` distinguishes them without forking the schema. `roles`
+ * is a jsonb string array in the simple profile; a normalized member_roles
+ * table can replace it at scale without changing the domain model.
+ */
+export const members = pgTable(
+  "members",
+  {
+    id: text("id").primaryKey(),
+    type: text("type").notNull(),
+    identityRef: text("identity_ref").notNull(),
+    displayName: text("display_name").notNull(),
+    roles: jsonb("roles").notNull().$type<string[]>().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex("members_identity_ref_idx").on(table.identityRef)],
+);
+
+/**
+ * Persona versions — one row per (personaId, version). Versions are immutable
+ * (Epic 2/16): a revision inserts a new row rather than updating an existing
+ * one, so the full version history is retained for model governance.
+ */
+export const personaVersions = pgTable(
+  "persona_versions",
+  {
+    personaId: text("persona_id").notNull(),
+    version: integer("version").notNull(),
+    name: text("name").notNull(),
+    role: text("role").notNull(),
+    systemPrompt: text("system_prompt").notNull(),
+    allowedTools: jsonb("allowed_tools").notNull().$type<string[]>().default([]),
+    model: jsonb("model").notNull().$type<{
+      modelId: string;
+      temperature?: number;
+      maxTokens?: number;
+    }>(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.personaId, table.version] })],
 );
